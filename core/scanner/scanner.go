@@ -333,6 +333,22 @@ func detectAlbum(root, path string) string {
 	rel, _ := filepath.Rel(root, path)
 	parts := strings.Split(rel, string(filepath.Separator))
 
+	for i, part := range parts {
+		if strings.EqualFold(part, "Google Photos") {
+			if i+1 >= len(parts) {
+				return ""
+			}
+			segment := parts[i+1]
+			if strings.EqualFold(segment, "Albums") && i+2 < len(parts) {
+				segment = parts[i+2]
+			}
+			if strings.HasPrefix(segment, "Photos from") {
+				return ""
+			}
+			return segment
+		}
+	}
+
 	if len(parts) > 1 {
 		if parts[0] == "Google Photos" && len(parts) > 2 {
 			if !strings.HasPrefix(parts[1], "Photos from") {
