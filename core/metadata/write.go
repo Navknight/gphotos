@@ -43,6 +43,8 @@ type BatchWriter struct {
 	mu    sync.Mutex
 }
 
+var exiftoolCommonWriteArgs = []string{"-overwrite_original_in_place", "-q", "-q", "-m"}
+
 func CanWriteMeta() bool {
 	return hasExiftool()
 }
@@ -71,7 +73,7 @@ func WriteMetaToFile(path string, meta models.MetaData) error {
 	if !ok {
 		return nil
 	}
-	args := append([]string{"-overwrite_original", "-q", "-q", "-m"}, itemArgs...)
+	args := append(append([]string{}, exiftoolCommonWriteArgs...), itemArgs...)
 	cmd := exec.Command("exiftool", args...)
 	if out, err := cmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("exiftool failed: %v (%s)", err, strings.TrimSpace(string(out)))
@@ -87,7 +89,7 @@ func WriteMetaBatch(items []WriteItem) error {
 		return fmt.Errorf("exiftool not available")
 	}
 
-	args := []string{"-overwrite_original", "-q", "-q", "-m"}
+	args := append([]string{}, exiftoolCommonWriteArgs...)
 	wrote := 0
 	for _, item := range items {
 		if item.Path == "" || !HasWritableMeta(item.Meta) {
@@ -280,7 +282,10 @@ func StartBatchWriter() (*BatchWriter, error) {
 	if !hasExiftool() {
 		return nil, fmt.Errorf("exiftool not available")
 	}
-	cmd := exec.Command("exiftool", "-stay_open", "True", "-common_args", "-overwrite_original", "-q", "-q", "-m", "-@", "-")
+	args := []string{"-stay_open", "True", "-common_args"}
+	args = append(args, exiftoolCommonWriteArgs...)
+	args = append(args, "-@", "-")
+	cmd := exec.Command("exiftool", args...)
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
 		return nil, err

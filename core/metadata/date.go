@@ -38,14 +38,6 @@ var datePatterns = []datePattern{
 	{regexp.MustCompile(`(?i)(20|19|18)\d{2}_(0[1-9]|1[0-2])_[0-3]\d_\d{2}_\d{2}_\d{2}`), parseLayout("2006_01_02_15_04_05")},
 	// WhatsApp: IMG-20201231-WA0001.jpg / VID-20201231-WA0001.mp4
 	{regexp.MustCompile(`(?i)(IMG|VID)-\d{8}-WA\d+`), parseWhatsApp()},
-	// Snapchat: Snapchat-1699999999.jpg (Unix seconds)
-	{regexp.MustCompile(`(?i)Snapchat-(\d{10})`), parseSnapchatUnix()},
-	// Snapchat edited: Snapchat-1699999999-edited.jpg (Unix seconds)
-	{regexp.MustCompile(`(?i)Snapchat-(\d{10})-edited`), parseSnapchatUnix()},
-	// Snapchat: Snapchat-1699999999999.jpg (Unix milliseconds)
-	{regexp.MustCompile(`(?i)Snapchat-(\d{13})`), parseSnapchatUnixMillis()},
-	// Snapchat edited: Snapchat-1699999999999-edited.jpg (Unix milliseconds)
-	{regexp.MustCompile(`(?i)Snapchat-(\d{13})-edited`), parseSnapchatUnixMillis()},
 	// Pixel: PXL_20210102_123456.jpg
 	{regexp.MustCompile(`(?i)PXL_\d{8}_\d{6}`), parseLayout("PXL_20060102_150405")},
 	// Pixel with millis: PXL_20210102_123456789.jpg (take first 6 after date)
@@ -216,28 +208,6 @@ func parsePixelMillis() func(string) (time.Time, bool) {
 		}
 		ts := fmt.Sprintf("PXL_%s_%s", m[1], timePart[:6])
 		return parseLayout("PXL_20060102_150405")(ts)
-	}
-}
-
-func parseSnapchatUnix() func(string) (time.Time, bool) {
-	return func(s string) (time.Time, bool) {
-		re := regexp.MustCompile(`(?i)Snapchat-(\d{10})`)
-		m := re.FindStringSubmatch(s)
-		if len(m) < 2 {
-			return time.Time{}, false
-		}
-		return ParseWithLayout("UNIX", m[1])
-	}
-}
-
-func parseSnapchatUnixMillis() func(string) (time.Time, bool) {
-	return func(s string) (time.Time, bool) {
-		re := regexp.MustCompile(`(?i)Snapchat-(\d{13})`)
-		m := re.FindStringSubmatch(s)
-		if len(m) < 2 {
-			return time.Time{}, false
-		}
-		return ParseWithLayout("UNIXMS", m[1])
 	}
 }
 
