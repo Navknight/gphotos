@@ -1,9 +1,9 @@
 """Every path and safety switch the tool uses, resolved in one place.
 
 Nothing else in the package is allowed a hardcoded path. The original scripts
-each carried their own `DATA = "/home/navknight/gphotos-sync-data"` and
-`DRIVE = "/mnt/photos"`, which is exactly why none of them could be shared or
-run on a second machine.
+each carried their own module-level `DATA = "/home/<someone>/..."` and
+`DRIVE = "/mnt/..."`, plus a hardcoded filesystem UUID and OAuth client id,
+which is exactly why none of them could be shared or run on a second machine.
 
 Precedence, highest first: CLI flag, environment variable, config file,
 built-in default. The config file is `$GPHOTOS_CONFIG`, else `./gphotos.toml`,
