@@ -1,33 +1,58 @@
-# If you prefer the allow list template instead of the deny list, see community template:
-# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
-#
-# Binaries for programs and plugins
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
+# Deny by PATTERN, not by name. Every file this project produces about a real
+# photo library is personal -- paths, GPS, people tags, captions, OAuth tokens --
+# and a name-based list only blocks the files that existed when it was written.
+# Anything new must be denied by default.
 
-# Test binary, built with `go test -c`
-*.test
+# Data: every manifest, ledger, plan and cache this tool writes.
+*.tsv
+*.tsv.gz
+all_dates.txt
+*_done.txt
+*_report.txt
+*.log
 
-# Code coverage profiles and other test artifacts
-*.out
-coverage.*
-*.coverprofile
-profile.cov
+# Credentials. Never, under any name.
+*token*.json
+*client_secret*.json
+*credentials*.json
+.upload_test_passed
 
-# Dependency directories (remove the comment below to include it)
-# vendor/
+# Private notes. These stay in ~/.local/share/gphotos/notes/, never in git.
+STATE.md
+GOAL.md
+PROCEDURE.md
 
-# Go workspace file
-go.work
-go.work.sum
+# Working trees a run creates in the repo directory if you let it.
+Takeout/
+takeout_sidecars/
+Output/
+Library/
+Albums/
+phone-staging/
+scratch/
 
-# env file
-.env
+# Local config: it holds real paths to a real drive.
+gphotos.toml
+config.toml
 
-# Editor/IDE
-# .idea/
-# .vscode/
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.tox/
+
+# Editors / tooling
+.idea/
+.vscode/
 .claude/
+.DS_Store
+
+# The one exception: the example config is checked in on purpose, and the test
+# fixtures are hand-built files that contain nothing personal.
+!gphotos.example.toml
+!tests/fixtures/**

@@ -1,0 +1,53 @@
+# gphotos configuration. Copy to ~/.config/gphotos/config.toml and edit.
+#
+# Precedence, highest wins: CLI flag > environment variable > this file >
+# built-in default. Every key is optional; with no config file at all,
+# `gphotos organize <takeout-dir>` still works.
+
+[paths]
+
+# Where the tool keeps its own state: manifests, ledgers, derived tables,
+# OAuth tokens. Never inside the repo, and never in git.
+# env: $GPHOTOS_DATA
+data = "~/.local/share/gphotos"
+
+# Where `organize` writes Library/ and Albums/.
+# env: $GPHOTOS_OUTPUT
+output = "./Output"
+
+# An EXISTING curated photo library that `plan` / `embed` / `verify` / `audit`
+# operate on IN PLACE. Leave empty and those commands refuse to run at all --
+# which is the point. `organize` never touches this and never needs it.
+# env: $GPHOTOS_ARCHIVE
+archive = ""
+
+
+[safety]
+
+# After every write, drop the page cache for the file and re-read it off the
+# device to confirm the bytes actually landed. On by default and it should stay
+# that way: the failure this catches is a USB-SATA bridge that allocates extents
+# without writing to them, producing a file with the correct size that reads
+# back as zeros. Size and mtime checks cannot see it.
+#
+# Turn this off only for storage where the whole dance is provably unnecessary,
+# never just to make a slow run faster.
+# env: $GPHOTOS_VERIFY_READBACK, or the --no-verify-readback flag
+verify_readback = true
+
+# Refuse to run unless `archive` sits on the filesystem with exactly this UUID.
+# Guards the case where a removable drive comes back on a different device node
+# holding different data. Empty disables the check.
+#   find yours with:  findmnt -n -o UUID --target /path/to/archive
+# env: $GPHOTOS_REQUIRE_MOUNT_UUID
+require_mount_uuid = ""
+
+
+# Only the `upload` extra reads this section.
+[google]
+
+# An OAuth "Desktop app" client, created in the Google Cloud console with the
+# Photos Library API enabled. Keep it mode 0600 and outside the data dir, so
+# the data dir can be backed up without dragging credentials along.
+# env: $GPHOTOS_CLIENT_SECRET
+client_secret_file = "~/.config/gphotos/client_secret.json"
