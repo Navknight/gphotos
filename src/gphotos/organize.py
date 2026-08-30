@@ -46,7 +46,7 @@ from pathlib import Path
 from . import dedup, embed, ledger
 from .dates import from_filename, load_custom, resolve
 from .exiftool import MEDIA_EXT, absent, absent_gps, read_tags
-from .sidecars import album_of, app_source_of, coord, origin_label, ts
+from .sidecars import app_source_of, coord, origin_label, ts
 
 LIBRARY = "Library"
 ALBUMS = "Albums"

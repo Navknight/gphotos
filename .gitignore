@@ -52,7 +52,11 @@ venv/
 .claude/
 .DS_Store
 
-# The one exception: the example config is checked in on purpose, and the test
-# fixtures are hand-built files that contain nothing personal.
+# The example config is checked in on purpose.
 !gphotos.example.toml
-!tests/fixtures/**
+
+# The test fixtures are GENERATED, not committed -- tests/fixtures/build.py
+# makes them and conftest.py runs it on demand. They contain nothing personal;
+# they are excluded because binary blobs nobody can read in a diff are a bad
+# way to describe what a test is testing.
+tests/fixtures/mini_takeout/

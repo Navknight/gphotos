@@ -20,7 +20,6 @@ import re
 import subprocess
 import sys
 from collections import defaultdict
-from datetime import datetime, timezone
 
 from .exiftool import absent, absent_gps
 from . import ledger

@@ -311,7 +311,7 @@ def process(cfg, row, tmpdir, dry):
 
 
 def main(cfg, apply=False, limit=0, plan_path=None, ledger_path=None):
-    archive = cfg.require_archive()
+    cfg.require_archive()
     cfg.mkdirs()
     dry = not apply
     # Overridable so a second plan (e.g. filename-derived dates) runs through

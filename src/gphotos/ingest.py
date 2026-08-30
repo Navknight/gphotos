@@ -34,7 +34,6 @@ import hashlib
 import json
 import os
 import struct
-import sys
 import tarfile
 import time
 import zipfile
